@@ -1,0 +1,116 @@
+-- Query 1: Total Revenue
+SELECT SUM(Sales) AS Total_Revenue 
+FROM `sample - superstore`;
+-- Result: Total Revenue = $2,272,449.85
+
+-- Query 2: Sales by Region
+SELECT Region, SUM(Sales) AS Total_Sales
+FROM `sample - superstore`
+GROUP BY Region
+ORDER BY Total_Sales DESC;
+-- Result:
+-- West   → $713,471 (Highest)
+-- East   → $672,194
+-- Central → $497,800
+-- South  → $388,983 (Lowest)
+-- Insight: West region contributes 31% of total sales
+
+-- Query 3: Profit by Category
+SELECT Category, SUM(Profit) AS Total_Profit
+FROM `sample - superstore`
+GROUP BY Category
+ORDER BY Total_Profit DESC;
+-- Result:
+-- Technology     → $145,387 (Highest) ✅
+-- Office Supplies → $120,489
+-- Furniture      → $16,980 (Lowest) ⚠️
+-- Insight: Furniture is underperforming in profit
+
+-- Query 4: Top 10 Customers by Sales
+select `customer name`,sum(sales) as total_sales
+from `sample - superstore`
+group by `customer name`
+order by total_sales desc
+limit 10;
+-- Result:
+-- 1. Sean Miller     → $25,043 (Top Customer)
+-- 2. Tamara Chand    → $19,017
+-- 3. Raymond Buch    → $15,117
+-- Insight: Top 3 customers contribute significantly 
+-- to overall revenue
+
+-- Query 6: Monthly Sales Trend
+select DATE_FORMAT(STR_TO_DATE(`Order Date`, '%m/%d/%Y'), '%Y-%m') AS Month,
+sum(sales) as monthly_sales
+from `sample - superstore`
+group by month
+order by month asc
+-- Key Findings:
+-- Overall growth from $481K (2014) to $725K (2017)
+-- = 50% growth in 3 years ✅
+-- Peak months: September & November every year
+-- Best month: November 2017 → $117,383
+-- Worst month: February 2014 → $4,119
+-- Insight: Holiday season drives maximum sales
+
+-- Query 7: Discount vs Profit Analysis
+select 
+     case 
+         when discount = 0  then 'no discount'
+         when discount <= 0.2 then 'low discount'
+         when discount <= 0.4 then 'medium discount'
+         else 'highest discount'
+         end as discount_level,
+round(avg(profit),2) as avg_profit,
+count(*) total_orders
+from `sample - superstore`
+group by discount_level
+order by avg_profit desc;
+-- Result:
+-- No Discount   → +$68.11 profit ✅
+-- Low Discount  → +$27.03 profit ✅
+-- Medium Discount → -$78.05 LOSS ❌
+-- High Discount   → -$111.10 LOSS ❌
+-- Insight: Discounts above 20% are causing losses!
+-- Recommendation: Cap discounts at 20% maximum
+
+-- Query 8: Top 10 States by Sales
+SELECT State, 
+       SUM(Sales) AS Total_Sales,
+       ROUND(SUM(Profit),2) AS Total_Profit
+FROM `sample - superstore`
+GROUP BY State
+ORDER BY Total_Sales DESC
+LIMIT 10;
+-- Result:
+-- California → $450,567 sales, +$74,669 profit ✅
+-- New York   → $309,453 sales, +$73,507 profit ✅
+-- Texas      → $169,553 sales, -$25,534 LOSS ❌
+-- Insight: 5 of top 10 states making losses!
+-- Recommendation: Investigate pricing and 
+-- discounts in Texas, Pennsylvania, Ohio
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
